@@ -1,80 +1,101 @@
-var fs = require('fs'),
-    http = require('http'),
-    path = require('path'),
-    methods = require('methods'),
-    express = require('express'),
-    bodyParser = require('body-parser'),
-    session = require('express-session'),
-    cors = require('cors'),
-    passport = require('passport'),
-    errorhandler = require('errorhandler'),
-    mongoose = require('mongoose');
+var app, bodyParser, cors, errorhandler, express, fs, http, isProduction, methods, mongoose, passport, path, server, session;
 
-var isProduction = process.env.NODE_ENV === 'production';
+fs = require('fs');
 
-// Create global app object
-var app = express();
+http = require('http');
+
+path = require('path');
+
+methods = require('methods');
+
+express = require('express');
+
+bodyParser = require('body-parser');
+
+session = require('express-session');
+
+cors = require('cors');
+
+passport = require('passport');
+
+errorhandler = require('errorhandler');
+
+mongoose = require('mongoose');
+
+isProduction = process.env.NODE_ENV === "production";
+
+app = express();
 
 app.use(cors());
 
-// Normal express config defaults
 app.use(require('morgan')('dev'));
-app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+
 app.use(bodyParser.json());
 
 app.use(require('method-override')());
-app.use(express.static(__dirname + '/public'));
 
-app.use(session({ secret: 'conduit', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false  }));
+app.use(express["static"](__dirname + '/public'));
+
+app.use(session({
+  secret: 'telescope',
+  cookie: {
+    maxAge: 60000
+  },
+  resave: false,
+  saveUninitialized: false
+}));
 
 if (!isProduction) {
   app.use(errorhandler());
 }
 
-if(isProduction){
-  mongoose.connect(process.env.MONGODB_URI);
+if (isProduction) {
+  mongoose.connect(process.env.MONGODB_URI, {
+    useMongoClient: true
+  });
 } else {
-  mongoose.connect('mongodb://localhost/conduit');
+  mongoose.connect('mongodb://localhost/telescope', {
+    useMongoClient: true
+  });
   mongoose.set('debug', true);
 }
 
 app.use(require('./routes'));
 
-/// catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  var err;
+  err = new Error('Not Found :(');
   err.status = 404;
-  next(err);
+  return next(err);
 });
 
-/// error handlers
-
-// development error handler
-// will print stacktrace
 if (!isProduction) {
   app.use(function(err, req, res, next) {
     console.log(err.stack);
-
     res.status(err.status || 500);
-
-    res.json({'errors': {
-      message: err.message,
-      error: err
-    }});
+    return res.json({
+      errors: {
+        message: err.message,
+        error: err
+      }
+    });
   });
 }
 
-// production error handler
-// no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.json({'errors': {
-    message: err.message,
-    error: {}
-  }});
+  return res.json({
+    errors: {
+      message: err.message,
+      error: {}
+    }
+  });
 });
 
-// finally, let's start our server...
-var server = app.listen( process.env.PORT || 3000, function(){
-  console.log('Listening on port ' + server.address().port);
+server = app.listen(process.env.PORT || 3000, function() {
+  return console.log("Hello Telescope. Listening on port " + (server.address().port) + ".");
 });
