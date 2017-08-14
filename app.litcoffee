@@ -1,4 +1,4 @@
-**App** is telescepe's app delegate.
+**App** is telescope's app delegate.
 
 	fs = require 'fs'
 	http = require 'http'
@@ -12,7 +12,7 @@
 	errorhandler = require 'errorhandler'
 	mongoose = require 'mongoose'
 
-	isProduction = process.env.NODE_ENV == "production"
+	isProduction = process.env.NODE_ENV is "production"
 
 	# Create global app object
 
@@ -61,7 +61,7 @@
 	if !isProduction
 		app.use (err, req, res, next) ->
 			console.log err.stack
-			res.status err.status || 500
+			res.status err.status or 500
 			res.json
 				errors:
 					message: err.message
@@ -70,7 +70,7 @@
 	# Standard error handler
 
 	app.use (err, req, res, next) ->
-		res.status err.status || 500
+		res.status err.status or 500
 		res.json
 			errors:
 				message: err.message
@@ -78,5 +78,5 @@
 
 	# Start server
 
-	server = app.listen process.env.PORT || 3000, ->
+	server = app.listen process.env.PORT or 3000, ->
 		console.log "Hello Telescope. Listening on port #{server.address().port}."

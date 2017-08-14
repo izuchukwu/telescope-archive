@@ -1,4 +1,4 @@
-**User** is, simply, the mongoose schema for Users.
+**User** is the mongoose schema for users.
 
 	mongoose = require 'mongoose'
 	beautifulUnique = require 'mongoose-beautiful-unique-validation'
@@ -6,14 +6,14 @@
 	jwt = require 'jsonwebtoken'
 	secret = require('../config').secret
 
-The User schema is backed by `UserSchema`, providing for a `username` string, an `email` string, a `bio` string, and a `location` string. Each are strings, though in use, there are restrictions and preferences:
+The User schema is backed by `UserSchema`, providing for a `username` string, an `email` string, a `bio` string, and a `location` string. Each are strings, though in use there are a few restrictions and preferences:
 
 - `username` is expected to be a latin alphanumeric (plus underscore) string of 1-24 characters
 - `email` is expected to be a valid email address (excl. bare TLDs)
 - `bio` is expected to be a unicode string of 0-140 characters. Preferentially, usernames are expressed as `@`-prefixed names, and scopes as `/`-bounded names.
 - `location` is a unicode string of 0-24 characters. Preferentially, locations are expressed as short names like "Austin", or abbreviations like "ATL".
 
-*TODO*: move restrictions to an external schema document & reference it here.
+*TODO: move restrictions to an external schema document & reference it here.*
 
 	UserSchema = new mongoose.Schema {
 		username:
@@ -44,7 +44,7 @@ The User schema is backed by `UserSchema`, providing for a `username` string, an
 
 	UserSchema.methods.validPassword = (password) ->
 		hash = crypto.pbkdf2Sync(password, @salt, 10000, 512, "sha512").toString "hex"
-		return @hash == hash
+		return @hash is hash
 
 	UserSchema.methods.generateJWT = ->
 		today = new Date
