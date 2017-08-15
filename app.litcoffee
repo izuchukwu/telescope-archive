@@ -47,6 +47,11 @@
 			useMongoClient: true
 		mongoose.set 'debug', true
 
+	# Models, external configs, & routes
+
+	require './models/User'
+	require './config/passport'
+
 	app.use require './routes'
 
 	# Catch 404's

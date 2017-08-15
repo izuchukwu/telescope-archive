@@ -23,7 +23,7 @@ The User schema is backed by `UserSchema`, providing for a `username` string, an
 			match: [/^[_a-zA-Z0-9]+$/, "isn't quite right"]
 			index: true
 			unique: "This username is already taken :("
-		email: String
+		email:
 			type: String
 			lowercase: true
 			required: [true, "can't be empty"]

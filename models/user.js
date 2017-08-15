@@ -19,13 +19,13 @@ UserSchema = new mongoose.Schema({
     index: true,
     unique: "This username is already taken :("
   },
-  email: String({
+  email: {
     type: String,
     lowercase: true,
     required: [true, "can't be empty"],
     match: [/\S+@\S+\.\S+/, "isn't quite right"],
     index: true
-  }),
+  },
   bio: String,
   location: String,
   hash: String,
